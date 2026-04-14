@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Book Recommendation Engine",
+  title: "Paige",
   description: "Get personalized book recommendations powered by AI",
 };
 
