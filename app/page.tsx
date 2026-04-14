@@ -1,8 +1,18 @@
 "use client";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const { openSignIn, openSignUp } = useClerk();
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push("/dashboard");
+    }
+  }, [isSignedIn, router]);
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F8F9F5" }}>
@@ -15,7 +25,7 @@ export default function Home() {
           Paige
         </span>
         <button
-          onClick={() => openSignIn()}
+          onClick={() => openSignIn({ forceRedirectUrl: "/dashboard" })}
           className="px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:opacity-90"
           style={{ borderColor: "#7C9A7E", color: "#4A7C59" }}
         >
@@ -38,14 +48,14 @@ export default function Home() {
         </p>
         <div className="flex gap-4">
           <button
-            onClick={() => openSignUp()}
+            onClick={() => openSignUp({ forceRedirectUrl: "/dashboard" })}
             className="px-6 py-3 rounded-full text-white font-medium transition-colors hover:opacity-90"
             style={{ backgroundColor: "#7C9A7E" }}
           >
             Get Started — it&apos;s free
           </button>
           <button
-            onClick={() => openSignIn()}
+            onClick={() => openSignIn({ forceRedirectUrl: "/dashboard" })}
             className="px-6 py-3 rounded-full font-medium border transition-colors hover:opacity-90"
             style={{ borderColor: "#E5E7EB", color: "#1C1C1C" }}
           >
