@@ -21,6 +21,7 @@ export default function RecommendPage() {
     const [avoid, setAvoid] = useState("");
     const [loading, setLoading] = useState(false);
     const [recommendations, setRecommendations] = useState<{ title: string; author: string; description: string }[]>([]);
+    const [saving, setSaving] = useState<Record<string, { status: string; total_pages: number } | null>>({});
 
     function toggleGenre(genre: string) {
         setGenres((prev) =>
@@ -180,20 +181,82 @@ export default function RecommendPage() {
                                     <p className="text-sm" style={{ color: "#7C9A7E" }}>{book.author}</p>
                                     <p className="text-sm mt-1" style={{ color: "#6B7280" }}>{book.description}</p>
                                 </div>
-                                <button
-                                    onClick={async () => {
-                                        await fetch("/api/books/save", {
-                                            method: "POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify(book),
-                                        });
-                                        alert(`"${book.title}" saved to your dashboard!`);
-                                    }}
-                                    className="self-start px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:opacity-90"
-                                    style={{ borderColor: "#7C9A7E", color: "#4A7C59" }}
-                                >
-                                    Save to Dashboard
-                                </button>
+
+                                {saving[book.title] ? (
+                                    <div className="flex flex-col gap-2">
+                                        <select
+                                            value={saving[book.title]!.status}
+                                            onChange={(e) =>
+                                                setSaving((prev) => ({
+                                                    ...prev,
+                                                    [book.title]: { ...prev[book.title]!, status: e.target.value },
+                                                }))
+                                            }
+                                            className="w-full rounded-xl px-3 py-2 text-sm border outline-none"
+                                            style={{ borderColor: "#E5E7EB", color: "#1C1C1C" }}
+                                        >
+                                            <option value="want_to_read">Want to Read</option>
+                                            <option value="reading">Reading</option>
+                                            <option value="finished">Finished</option>
+                                        </select>
+                                        {saving[book.title]!.status === "reading" && (
+                                            <input
+                                                type="number"
+                                                placeholder="Total pages (optional)"
+                                                value={saving[book.title]!.total_pages || ""}
+                                                onChange={(e) =>
+                                                    setSaving((prev) => ({
+                                                        ...prev,
+                                                        [book.title]: { ...prev[book.title]!, total_pages: Number(e.target.value) },
+                                                    }))
+                                                }
+                                                className="w-full rounded-xl px-3 py-2 text-sm border outline-none"
+                                                style={{ borderColor: "#E5E7EB", color: "#1C1C1C" }}
+                                            />
+                                        )}
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={async () => {
+                                                    await fetch("/api/books/save", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({
+                                                            ...book,
+                                                            status: saving[book.title]!.status,
+                                                            total_pages: saving[book.title]!.total_pages,
+                                                        }),
+                                                    });
+                                                    setSaving((prev) => ({ ...prev, [book.title]: null }));
+                                                    alert(`"${book.title}" saved to your dashboard!`);
+                                                }}
+                                                className="flex-1 py-2 rounded-full text-sm font-medium text-white"
+                                                style={{ backgroundColor: "#7C9A7E" }}
+                                            >
+                                                Confirm Save
+                                            </button>
+                                            <button
+                                                onClick={() => setSaving((prev) => ({ ...prev, [book.title]: null }))}
+                                                className="flex-1 py-2 rounded-full text-sm font-medium border"
+                                                style={{ borderColor: "#E5E7EB", color: "#6B7280" }}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() =>
+                                            setSaving((prev) => ({
+                                                ...prev,
+                                                [book.title]: { status: "want_to_read", total_pages: 0 },
+                                            }))
+                                        }
+                                        className="self-start px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:opacity-90"
+                                        style={{ borderColor: "#7C9A7E", color: "#4A7C59" }}
+                                    >
+                                        Save to Dashboard
+                                    </button>
+                                )}
                             </div>
                         ))}
                     </div>
