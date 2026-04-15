@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, Sparkles, BookmarkPlus, Check, X } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
 
 const GENRES = ["Fiction", "Non-Fiction", "Mystery", "Sci-Fi", "Fantasy", "Romance", "Thriller", "Biography", "Self-Help",
@@ -64,9 +65,10 @@ export default function RecommendPage() {
                     <ThemeToggle />
                     <button
                         onClick={() => router.push("/dashboard")}
-                        className="text-sm"
+                        className="flex items-center gap-1 text-sm"
                         style={{ color: "var(--color-text-secondary)" }}
                     >
+                        <ChevronLeft size={16} />
                         Back to Dashboard
                     </button>
                 </div>
@@ -170,10 +172,11 @@ export default function RecommendPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-full font-medium text-white transition-colors hover:opacity-90
-  disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-2 py-3 rounded-full font-medium text-white
+  transition-colors hover:opacity-90 disabled:opacity-50"
                         style={{ backgroundColor: "var(--color-primary)" }}
                     >
+                        <Sparkles size={16} />
                         {loading ? "Finding your books..." : "Get Recommendations"}
                     </button>
                 </form>
@@ -256,19 +259,23 @@ export default function RecommendPage() {
                                                     setSaving((prev) => ({ ...prev, [book.title]: null }));
                                                     alert(`"${book.title}" saved to your dashboard!`);
                                                 }}
-                                                className="flex-1 py-2 rounded-full text-sm font-medium text-white"
+                                                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-full
+  text-sm font-medium text-white"
                                                 style={{ backgroundColor: "var(--color-primary)" }}
                                             >
+                                                <Check size={14} />
                                                 Confirm Save
                                             </button>
                                             <button
                                                 onClick={() => setSaving((prev) => ({ ...prev, [book.title]: null }))}
-                                                className="flex-1 py-2 rounded-full text-sm font-medium border"
+                                                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-full
+  text-sm font-medium border"
                                                 style={{
                                                     borderColor: "var(--color-border)", color:
                                                         "var(--color-text-secondary)"
                                                 }}
                                             >
+                                                <X size={14} />
                                                 Cancel
                                             </button>
                                         </div>
@@ -281,10 +288,11 @@ export default function RecommendPage() {
                                                 [book.title]: { status: "want_to_read", total_pages: 0 },
                                             }))
                                         }
-                                        className="self-start px-4 py-2 rounded-full text-sm font-medium border
-  transition-colors hover:opacity-90"
+                                        className="self-start flex items-center gap-2 px-4 py-2 rounded-full text-sm
+  font-medium border transition-colors hover:opacity-90"
                                         style={{ borderColor: "var(--color-primary)", color: "var(--color-primary-dark)" }}
                                     >
+                                        <BookmarkPlus size={15} />
                                         Save to Dashboard
                                     </button>
                                 )}
@@ -296,3 +304,4 @@ export default function RecommendPage() {
         </div>
     );
 }
+

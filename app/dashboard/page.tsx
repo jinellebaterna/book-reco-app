@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import { BookOpen, LogOut, Bookmark, CheckCircle, PenLine, Check, X } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
 
 type Book = {
@@ -31,6 +32,12 @@ const STATUS_TEXT_COLORS: Record<Book["status"], string> = {
     want_to_read: "#1C1C1C",
     reading: "#FFFFFF",
     finished: "#FFFFFF",
+};
+
+const STATUS_ICONS: Record<Book["status"], React.ReactNode> = {
+    want_to_read: <Bookmark size={12} />,
+    reading: <BookOpen size={12} />,
+    finished: <CheckCircle size={12} />,
 };
 
 export default function Dashboard() {
@@ -94,16 +101,18 @@ export default function Dashboard() {
                     <ThemeToggle />
                     <Link
                         href="/recommend"
-                        className="px-4 py-2 rounded-full text-sm font-medium text-white"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white"
                         style={{ backgroundColor: "var(--color-primary)" }}
                     >
+                        <BookOpen size={15} />
                         Get Recommendations
                     </Link>
                     <button
                         onClick={() => signOut({ redirectUrl: "/" })}
-                        className="text-sm"
+                        className="flex items-center gap-2 text-sm"
                         style={{ color: "var(--color-text-secondary)" }}
                     >
+                        <LogOut size={15} />
                         Sign Out
                     </button>
                 </div>
@@ -132,9 +141,11 @@ export default function Dashboard() {
                         </p>
                         <Link
                             href="/recommend"
-                            className="px-6 py-3 rounded-full text-sm font-medium text-white"
+                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium
+  text-white"
                             style={{ backgroundColor: "var(--color-primary)" }}
                         >
+                            <BookOpen size={15} />
                             Get Recommendations
                         </Link>
                     </div>
@@ -148,12 +159,14 @@ export default function Dashboard() {
                             >
                                 <div className="flex items-center justify-between">
                                     <span
-                                        className="text-xs font-medium px-3 py-1 rounded-full"
+                                        className="inline-flex items-center gap-1 text-xs font-medium px-3 py-1
+  rounded-full"
                                         style={{
                                             backgroundColor: STATUS_COLORS[book.status],
                                             color: STATUS_TEXT_COLORS[book.status],
                                         }}
                                     >
+                                        {STATUS_ICONS[book.status]}
                                         {STATUS_LABELS[book.status]}
                                     </span>
                                 </div>
@@ -251,19 +264,23 @@ export default function Dashboard() {
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => handleProgressUpdate(book.id)}
-                                                className="flex-1 py-2 rounded-full text-sm font-medium text-white"
+                                                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-full
+  text-sm font-medium text-white"
                                                 style={{ backgroundColor: "var(--color-primary)" }}
                                             >
+                                                <Check size={14} />
                                                 Save
                                             </button>
                                             <button
                                                 onClick={() => setExpandedId(null)}
-                                                className="flex-1 py-2 rounded-full text-sm font-medium border"
+                                                className="flex-1 flex items-center justify-center gap-2 py-2 rounded-full
+  text-sm font-medium border"
                                                 style={{
                                                     borderColor: "var(--color-border)", color:
                                                         "var(--color-text-secondary)"
                                                 }}
                                             >
+                                                <X size={14} />
                                                 Cancel
                                             </button>
                                         </div>
@@ -271,9 +288,10 @@ export default function Dashboard() {
                                 ) : (
                                     <button
                                         onClick={() => openProgressForm(book)}
-                                        className="self-start text-sm"
+                                        className="self-start flex items-center gap-1 text-sm"
                                         style={{ color: "var(--color-primary)" }}
                                     >
+                                        <PenLine size={13} />
                                         Update Progress
                                     </button>
                                 )}
