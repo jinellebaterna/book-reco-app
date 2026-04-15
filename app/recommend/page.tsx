@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Sparkles, BookmarkPlus, Check, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles, BookmarkPlus, Check, X } from "lucide-react";
 import ThemeToggle from "../components/ThemeToggle";
 
 const GENRES = ["Fiction", "Non-Fiction", "Mystery", "Sci-Fi", "Fantasy", "Romance", "Thriller", "Biography", "Self-Help",
@@ -25,6 +25,16 @@ export default function RecommendPage() {
     const [loading, setLoading] = useState(false);
     const [recommendations, setRecommendations] = useState<{ title: string; author: string; description: string }[]>([]);
     const [saving, setSaving] = useState<Record<string, { status: string; total_pages: number } | null>>({});
+    const [currentPage, setCurrentPage] = useState(0);
+
+    const resultsRef = useRef<HTMLDivElement>(null);
+
+    const ITEMS_PER_PAGE = 5;
+    const totalPages = Math.ceil(recommendations.length / ITEMS_PER_PAGE);
+    const paginatedBooks = recommendations.slice(
+        currentPage * ITEMS_PER_PAGE,
+        (currentPage + 1) * ITEMS_PER_PAGE
+    );
 
     function toggleGenre(genre: string) {
         setGenres((prev) =>
@@ -44,6 +54,10 @@ export default function RecommendPage() {
             });
             const data = await res.json();
             setRecommendations(data.books || []);
+            setCurrentPage(0);
+            setTimeout(() => {
+                resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 100);
         } catch (err) {
             console.error(err);
         } finally {
@@ -183,11 +197,11 @@ export default function RecommendPage() {
 
                 {/* Results */}
                 {recommendations.length > 0 && (
-                    <div className="mt-12 flex flex-col gap-4">
+                    <div ref={resultsRef} className="mt-12 flex flex-col gap-4">
                         <h2 className="text-xl font-bold" style={{ color: "var(--color-text-primary)" }}>
                             Your recommendations
                         </h2>
-                        {recommendations.map((book) => (
+                        {paginatedBooks.map((book) => (
                             <div
                                 key={book.title}
                                 className="rounded-2xl p-6 border flex flex-col gap-3"
@@ -298,10 +312,44 @@ export default function RecommendPage() {
                                 )}
                             </div>
                         ))}
+
+                        {/* Pagination */}
+                        {totalPages > 1 && (
+                            <div className="flex items-center justify-between pt-4">
+                                <button
+                                    onClick={() => {
+                                        setCurrentPage((p) => p - 1);
+                                        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                    }}
+                                    disabled={currentPage === 0}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border
+  transition-colors disabled:opacity-40"
+                                    style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
+                                >
+                                    <ChevronLeft size={15} />
+                                    Previous
+                                </button>
+                                <span className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
+                                    Page {currentPage + 1} of {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        setCurrentPage((p) => p + 1);
+                                        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                    }}
+                                    disabled={currentPage === totalPages - 1}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border
+  transition-colors disabled:opacity-40"
+                                    style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
+                                >
+                                    Next
+                                    <ChevronRight size={15} />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </main>
         </div>
     );
 }
-
