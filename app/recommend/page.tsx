@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "../components/ThemeToggle";
 
-const GENRES = ["Fiction", "Non-Fiction", "Mystery", "Sci-Fi", "Fantasy", "Romance", "Thriller", "Biography", "Self-Help", "History"];
+const GENRES = ["Fiction", "Non-Fiction", "Mystery", "Sci-Fi", "Fantasy", "Romance", "Thriller", "Biography", "Self-Help",
+    "History"];
 
 const MOODS = [
     "Looking for adventure",
@@ -49,36 +51,39 @@ export default function RecommendPage() {
     }
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: "#F8F9F5" }}>
+        <div className="min-h-screen" style={{ backgroundColor: "var(--color-bg)" }}>
             {/* Navbar */}
             <nav
                 className="flex items-center justify-between px-8 py-4 border-b"
-                style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF" }}
+                style={{ borderColor: "var(--color-border)", backgroundColor: "var(--color-card)" }}
             >
-                <span className="text-xl font-semibold" style={{ color: "#4A7C59" }}>
+                <span className="text-xl font-semibold" style={{ color: "var(--color-primary-dark)" }}>
                     Paige
                 </span>
-                <button
-                    onClick={() => router.push("/dashboard")}
-                    className="text-sm"
-                    style={{ color: "#6B7280" }}
-                >
-                    Back to Dashboard
-                </button>
+                <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <button
+                        onClick={() => router.push("/dashboard")}
+                        className="text-sm"
+                        style={{ color: "var(--color-text-secondary)" }}
+                    >
+                        Back to Dashboard
+                    </button>
+                </div>
             </nav>
 
             <main className="max-w-2xl mx-auto px-6 py-12">
-                <h1 className="text-3xl font-bold mb-2" style={{ color: "#1C1C1C" }}>
+                <h1 className="text-3xl font-bold mb-2" style={{ color: "var(--color-text-primary)" }}>
                     Find your next book
                 </h1>
-                <p className="mb-8" style={{ color: "#6B7280" }}>
+                <p className="mb-8" style={{ color: "var(--color-text-secondary)" }}>
                     Tell us what you&apos;re in the mood for.
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                     {/* Genres */}
                     <div>
-                        <label className="block font-medium mb-3" style={{ color: "#1C1C1C" }}>
+                        <label className="block font-medium mb-3" style={{ color: "var(--color-text-primary)" }}>
                             What genres do you enjoy?
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -89,9 +94,9 @@ export default function RecommendPage() {
                                     onClick={() => toggleGenre(g)}
                                     className="px-4 py-2 rounded-full text-sm border transition-colors"
                                     style={{
-                                        backgroundColor: genres.includes(g) ? "#7C9A7E" : "#FFFFFF",
-                                        color: genres.includes(g) ? "#FFFFFF" : "#1C1C1C",
-                                        borderColor: genres.includes(g) ? "#7C9A7E" : "#E5E7EB",
+                                        backgroundColor: genres.includes(g) ? "var(--color-primary)" : "var(--color-card)",
+                                        color: genres.includes(g) ? "#FFFFFF" : "var(--color-text-primary)",
+                                        borderColor: genres.includes(g) ? "var(--color-primary)" : "var(--color-border)",
                                     }}
                                 >
                                     {g}
@@ -102,7 +107,7 @@ export default function RecommendPage() {
 
                     {/* Mood */}
                     <div>
-                        <label className="block font-medium mb-3" style={{ color: "#1C1C1C" }}>
+                        <label className="block font-medium mb-3" style={{ color: "var(--color-text-primary)" }}>
                             What&apos;s your current mood?
                         </label>
                         <div className="flex flex-wrap gap-2">
@@ -113,9 +118,9 @@ export default function RecommendPage() {
                                     onClick={() => setMood(m)}
                                     className="px-4 py-2 rounded-full text-sm border transition-colors"
                                     style={{
-                                        backgroundColor: mood === m ? "#7C9A7E" : "#FFFFFF",
-                                        color: mood === m ? "#FFFFFF" : "#1C1C1C",
-                                        borderColor: mood === m ? "#7C9A7E" : "#E5E7EB",
+                                        backgroundColor: mood === m ? "var(--color-primary)" : "var(--color-card)",
+                                        color: mood === m ? "#FFFFFF" : "var(--color-text-primary)",
+                                        borderColor: mood === m ? "var(--color-primary)" : "var(--color-border)",
                                     }}
                                 >
                                     {m}
@@ -126,7 +131,7 @@ export default function RecommendPage() {
 
                     {/* Loved Books */}
                     <div>
-                        <label className="block font-medium mb-2" style={{ color: "#1C1C1C" }}>
+                        <label className="block font-medium mb-2" style={{ color: "var(--color-text-primary)" }}>
                             Books you&apos;ve loved
                         </label>
                         <textarea
@@ -135,14 +140,19 @@ export default function RecommendPage() {
                             placeholder="e.g. The Alchemist, Atomic Habits, Gone Girl..."
                             rows={3}
                             className="w-full rounded-xl px-4 py-3 text-sm border outline-none"
-                            style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF", color: "#1C1C1C" }}
+                            style={{
+                                borderColor: "var(--color-border)", backgroundColor: "var(--color-card)", color:
+                                    "var(--color-text-primary)"
+                            }}
                         />
                     </div>
 
                     {/* Avoid */}
                     <div>
-                        <label className="block font-medium mb-2" style={{ color: "#1C1C1C" }}>
-                            Anything to avoid? <span style={{ color: "#6B7280", fontWeight: 400 }}>(optional)</span>
+                        <label className="block font-medium mb-2" style={{ color: "var(--color-text-primary)" }}>
+                            Anything to avoid? <span style={{
+                                color: "var(--color-text-secondary)", fontWeight: 400
+                            }}>(optional)</span>
                         </label>
                         <textarea
                             value={avoid}
@@ -150,15 +160,19 @@ export default function RecommendPage() {
                             placeholder="e.g. No horror, no slow burns..."
                             rows={2}
                             className="w-full rounded-xl px-4 py-3 text-sm border outline-none"
-                            style={{ borderColor: "#E5E7EB", backgroundColor: "#FFFFFF", color: "#1C1C1C" }}
+                            style={{
+                                borderColor: "var(--color-border)", backgroundColor: "var(--color-card)", color:
+                                    "var(--color-text-primary)"
+                            }}
                         />
                     </div>
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-full font-medium text-white transition-colors hover:opacity-90 disabled:opacity-50"
-                        style={{ backgroundColor: "#7C9A7E" }}
+                        className="w-full py-3 rounded-full font-medium text-white transition-colors hover:opacity-90
+  disabled:opacity-50"
+                        style={{ backgroundColor: "var(--color-primary)" }}
                     >
                         {loading ? "Finding your books..." : "Get Recommendations"}
                     </button>
@@ -167,19 +181,23 @@ export default function RecommendPage() {
                 {/* Results */}
                 {recommendations.length > 0 && (
                     <div className="mt-12 flex flex-col gap-4">
-                        <h2 className="text-xl font-bold" style={{ color: "#1C1C1C" }}>
+                        <h2 className="text-xl font-bold" style={{ color: "var(--color-text-primary)" }}>
                             Your recommendations
                         </h2>
                         {recommendations.map((book) => (
                             <div
                                 key={book.title}
                                 className="rounded-2xl p-6 border flex flex-col gap-3"
-                                style={{ backgroundColor: "#FFFFFF", borderColor: "#E5E7EB" }}
+                                style={{ backgroundColor: "var(--color-card)", borderColor: "var(--color-border)" }}
                             >
                                 <div>
-                                    <h3 className="font-semibold" style={{ color: "#1C1C1C" }}>{book.title}</h3>
-                                    <p className="text-sm" style={{ color: "#7C9A7E" }}>{book.author}</p>
-                                    <p className="text-sm mt-1" style={{ color: "#6B7280" }}>{book.description}</p>
+                                    <h3 className="font-semibold" style={{
+                                        color: "var(--color-text-primary)"
+                                    }}>{book.title}</h3>
+                                    <p className="text-sm" style={{ color: "var(--color-primary)" }}>{book.author}</p>
+                                    <p className="text-sm mt-1" style={{
+                                        color: "var(--color-text-secondary)"
+                                    }}>{book.description}</p>
                                 </div>
 
                                 {saving[book.title] ? (
@@ -193,7 +211,10 @@ export default function RecommendPage() {
                                                 }))
                                             }
                                             className="w-full rounded-xl px-3 py-2 text-sm border outline-none"
-                                            style={{ borderColor: "#E5E7EB", color: "#1C1C1C" }}
+                                            style={{
+                                                borderColor: "var(--color-border)", color:
+                                                    "var(--color-text-primary)", backgroundColor: "var(--color-card)"
+                                            }}
                                         >
                                             <option value="want_to_read">Want to Read</option>
                                             <option value="reading">Reading</option>
@@ -207,11 +228,17 @@ export default function RecommendPage() {
                                                 onChange={(e) =>
                                                     setSaving((prev) => ({
                                                         ...prev,
-                                                        [book.title]: { ...prev[book.title]!, total_pages: Number(e.target.value) },
+                                                        [book.title]: {
+                                                            ...prev[book.title]!, total_pages:
+                                                                Number(e.target.value)
+                                                        },
                                                     }))
                                                 }
                                                 className="w-full rounded-xl px-3 py-2 text-sm border outline-none"
-                                                style={{ borderColor: "#E5E7EB", color: "#1C1C1C" }}
+                                                style={{
+                                                    borderColor: "var(--color-border)", color:
+                                                        "var(--color-text-primary)", backgroundColor: "var(--color-card)"
+                                                }}
                                             />
                                         )}
                                         <div className="flex gap-2">
@@ -230,14 +257,17 @@ export default function RecommendPage() {
                                                     alert(`"${book.title}" saved to your dashboard!`);
                                                 }}
                                                 className="flex-1 py-2 rounded-full text-sm font-medium text-white"
-                                                style={{ backgroundColor: "#7C9A7E" }}
+                                                style={{ backgroundColor: "var(--color-primary)" }}
                                             >
                                                 Confirm Save
                                             </button>
                                             <button
                                                 onClick={() => setSaving((prev) => ({ ...prev, [book.title]: null }))}
                                                 className="flex-1 py-2 rounded-full text-sm font-medium border"
-                                                style={{ borderColor: "#E5E7EB", color: "#6B7280" }}
+                                                style={{
+                                                    borderColor: "var(--color-border)", color:
+                                                        "var(--color-text-secondary)"
+                                                }}
                                             >
                                                 Cancel
                                             </button>
@@ -251,8 +281,9 @@ export default function RecommendPage() {
                                                 [book.title]: { status: "want_to_read", total_pages: 0 },
                                             }))
                                         }
-                                        className="self-start px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:opacity-90"
-                                        style={{ borderColor: "#7C9A7E", color: "#4A7C59" }}
+                                        className="self-start px-4 py-2 rounded-full text-sm font-medium border
+  transition-colors hover:opacity-90"
+                                        style={{ borderColor: "var(--color-primary)", color: "var(--color-primary-dark)" }}
                                     >
                                         Save to Dashboard
                                     </button>
